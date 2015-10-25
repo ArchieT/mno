@@ -56,9 +56,8 @@ func (d Druzyna) ZaZmianęDecyzji() int {
 func (d Druzyna) ZaSpóźnienie() int {
 	if d.Spoznienie<21 {
 		return d.Spoznienie
-	} else {
-		return d.Spoznienie+((d.Spoznienie-20)*9)
 	}
+	return d.Spoznienie+((d.Spoznienie-20)*9)
 }
 func (d Druzyna) PunktyKarne() int {
 	return d.ZaSkreślenia()+d.ZaBrakPunktuZłyKod()+d.ZaBrakZadaniaSpecjalnego()+d.ZaStowarzyszony()+d.ZaZmianęDecyzji()+d.ZaSpóźnienie()
