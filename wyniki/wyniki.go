@@ -123,7 +123,7 @@ func (z Zawody) Present(out io.Writer) {
 	buffer.WriteString(z.Data)
 	buffer.WriteString(`<br>`)
 	buffer.WriteString(z.Miejsce)
-	buffer.WriteString("</b></font></p><br><table><tr><th>Msc</th><th>PK(suma)</th><th>Nazwa</th><th>Imiona i nazwiska</th><th>BP</th><th>BP E</th><th>PS</th><th>Sþoźnienie</th><th>Poprawki</th><th>Skreślenia</th></tr>")
+	buffer.WriteString("</b></font><br><table><tr><th>Msc</th><th>PK(suma)</th><th>Nazwa</th><th>Imiona i nazwiska</th><th>BP</th><th>BP E</th><th>PS</th><th>Sþoźnienie</th><th>Poprawki</th><th>Skreślenia</th></tr>")
 	miejsca := z.Wyniki.Miejsca()
 	td := func() {
 		buffer.WriteString("</td><td>")
@@ -179,7 +179,7 @@ func (z Zawody) Present(out io.Writer) {
 		wn(j.Skreslenia, j.ZaSkreślenia())
 		w("</td></tr>")
 	}
-	w(`</table><br><hr><font size="1"><p align="right"><i>Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></i></p></font></body></html>`)
+	w(`</table><br><hr><font size="1"></p><p align="right"><i>Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></i></p></font></body></html>`)
 	buffer.WriteTo(out)
 }
 
