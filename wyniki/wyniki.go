@@ -1,109 +1,108 @@
 package wyniki
 
 import (
-	"github.com/gocarina/gocsv"
-	"encoding/csv"
-	"os"
-	"io"
-	"html"
 	"bytes"
+	"encoding/csv"
+	"github.com/gocarina/gocsv"
+	"html"
+	"io"
+	"os"
 	"sort"
 	"strconv"
 )
 
 type druzynaCSV struct {
-	Nazwa string `csv:"Nazwa"`
-	Nazwisko1 string `csv:"Nazwisko1"`
-	Nazwisko2 string `csv:"Nazwisko2"`
-	Nazwisko3 string `csv:"Nazwisko3"`
-	Nazwisko4 string `csv:"Nazwisko4"`
-	Nazwisko5 string `csv:"Nazwisko5"`
-	Nazwisko6 string `csv:"Nazwisko6"`
-	BrakiPunktuZlyKod int `csv:"BrakiPunktuZłyKod"`
-	Mylne int `csv:"Mylne"`
-	Spoznienie int `csv:"Spóźnienie"`
-	Skreslenia int `csv:"Skreślenia"`
-	BrakSpecjalnego int `csv:"brakspecjalnego"`
-	ZmianaDecyzji int `csv:"zmianadecyzji"`
+	Nazwa             string `csv:"Nazwa"`
+	Nazwisko1         string `csv:"Nazwisko1"`
+	Nazwisko2         string `csv:"Nazwisko2"`
+	Nazwisko3         string `csv:"Nazwisko3"`
+	Nazwisko4         string `csv:"Nazwisko4"`
+	Nazwisko5         string `csv:"Nazwisko5"`
+	Nazwisko6         string `csv:"Nazwisko6"`
+	BrakiPunktuZlyKod int    `csv:"BrakiPunktuZłyKod"`
+	Mylne             int    `csv:"Mylne"`
+	Spoznienie        int    `csv:"Spóźnienie"`
+	Skreslenia        int    `csv:"Skreślenia"`
+	BrakSpecjalnego   int    `csv:"brakspecjalnego"`
+	ZmianaDecyzji     int    `csv:"zmianadecyzji"`
 }
 
 type Druzyna struct {
-	Nazwa string
-	Nazwiska []string
+	Nazwa             string
+	Nazwiska          []string
 	BrakiPunktuZlyKod int
-	Mylne int
-	Spoznienie int
-	Skreslenia int
-	BrakSpecjalnego int
-	ZmianaDecyzji int
+	Mylne             int
+	Spoznienie        int
+	Skreslenia        int
+	BrakSpecjalnego   int
+	ZmianaDecyzji     int
 }
 
 func (d Druzyna) ZaSkreślenia() int {
-	return 10*d.Skreslenia
+	return 10 * d.Skreslenia
 }
 func (d Druzyna) ZaBrakPunktuZłyKod() int {
-	return 90*d.BrakiPunktuZlyKod
+	return 90 * d.BrakiPunktuZlyKod
 }
 func (d Druzyna) ZaBrakZadaniaSpecjalnego() int {
-	return 10*d.BrakSpecjalnego
+	return 10 * d.BrakSpecjalnego
 }
 func (d Druzyna) ZaStowarzyszony() int {
-	return 25*d.Mylne
+	return 25 * d.Mylne
 }
 func (d Druzyna) ZaZmianęDecyzji() int {
-	return 10*d.ZmianaDecyzji
+	return 10 * d.ZmianaDecyzji
 }
 func (d Druzyna) ZaSpóźnienie() int {
-	if d.Spoznienie<21 {
+	if d.Spoznienie < 21 {
 		return d.Spoznienie
 	}
-	return d.Spoznienie+((d.Spoznienie-20)*9)
+	return d.Spoznienie + ((d.Spoznienie - 20) * 9)
 }
 func (d Druzyna) PunktyKarne() int {
-	return d.ZaSkreślenia()+d.ZaBrakPunktuZłyKod()+d.ZaBrakZadaniaSpecjalnego()+d.ZaStowarzyszony()+d.ZaZmianęDecyzji()+d.ZaSpóźnienie()
+	return d.ZaSkreślenia() + d.ZaBrakPunktuZłyKod() + d.ZaBrakZadaniaSpecjalnego() + d.ZaStowarzyszony() + d.ZaZmianęDecyzji() + d.ZaSpóźnienie()
 }
 
-
 func (d druzynaCSV) Druzyna() Druzyna {
-	nazwiska := make([]string,0,6)
-	if len(d.Nazwisko1)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko1)
+	nazwiska := make([]string, 0, 6)
+	if len(d.Nazwisko1) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko1)
 	}
-	if len(d.Nazwisko2)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko2)
+	if len(d.Nazwisko2) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko2)
 	}
-	if len(d.Nazwisko3)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko3)
+	if len(d.Nazwisko3) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko3)
 	}
-	if len(d.Nazwisko4)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko4)
+	if len(d.Nazwisko4) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko4)
 	}
-	if len(d.Nazwisko5)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko5)
+	if len(d.Nazwisko5) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko5)
 	}
-	if len(d.Nazwisko6)>0 {
-		nazwiska = append(nazwiska,d.Nazwisko6)
+	if len(d.Nazwisko6) > 0 {
+		nazwiska = append(nazwiska, d.Nazwisko6)
 	}
-	return Druzyna{d.Nazwa,nazwiska,d.BrakiPunktuZlyKod,d.Mylne,d.Spoznienie,d.Skreslenia,d.BrakSpecjalnego,d.ZmianaDecyzji}
+	return Druzyna{d.Nazwa, nazwiska, d.BrakiPunktuZlyKod, d.Mylne, d.Spoznienie, d.Skreslenia, d.BrakSpecjalnego, d.ZmianaDecyzji}
 }
 
 type Wyniki []Druzyna
 
 func (w Wyniki) Miejsca() map[int]int {
 	var miejsca map[int]int
-	punkty := make([]int,0,len(w))
-	for _,j := range w {
-		punkty = append(punkty,j.PunktyKarne())
+	punkty := make([]int, 0, len(w))
+	for _, j := range w {
+		punkty = append(punkty, j.PunktyKarne())
 	}
 	sort.Ints(punkty)
 	index := 1
-	for i:=len(punkty)/2-1;i>=0;i-- {
-		opp :=len(punkty)-1-i
-		punkty[i],punkty[opp]=punkty[opp],punkty[i]
+	for i := len(punkty)/2 - 1; i >= 0; i-- {
+		opp := len(punkty) - 1 - i
+		punkty[i], punkty[opp] = punkty[opp], punkty[i]
 	}
-	for _,j := range punkty {
-		if _,ok:=miejsca[j] ; !ok {
-			miejsca[j]=index
+	for _, j := range punkty {
+		if _, ok := miejsca[j]; !ok {
+			miejsca[j] = index
 			index++
 		}
 	}
@@ -112,9 +111,9 @@ func (w Wyniki) Miejsca() map[int]int {
 
 type Zawody struct {
 	*Wyniki
-	Data string
-	Miejsce string
-	Czas int
+	Data     string
+	Miejsce  string
+	Czas     int
 	CzasPlus int
 }
 
@@ -140,11 +139,11 @@ func (z Zawody) Present(out io.Writer) {
 		wi(nawias)
 		w(")")
 	}
-	wn := func(zwycz int,nawias int) {
+	wn := func(zwycz int, nawias int) {
 		wi(zwycz)
 		wnaw(nawias)
 	}
-	wnb := func(zwycz bool,nawias int) {
+	wnb := func(zwycz bool, nawias int) {
 		if zwycz {
 			w("TAK")
 		} else {
@@ -152,7 +151,7 @@ func (z Zawody) Present(out io.Writer) {
 		}
 		wnaw(nawias)
 	}
-	for _,j := range *z.Wyniki {
+	for _, j := range *z.Wyniki {
 		buffer.WriteString("<tr><td>")
 		buffer.WriteString(strconv.Itoa(miejsca[j.PunktyKarne()]))
 		buffer.WriteString("</td><td>")
@@ -160,24 +159,24 @@ func (z Zawody) Present(out io.Writer) {
 		buffer.WriteString("</td><td>")
 		buffer.WriteString(html.EscapeString(j.Nazwa))
 		buffer.WriteString("</td><td>")
-		for ki,k := range j.Nazwiska {
+		for ki, k := range j.Nazwiska {
 			buffer.WriteString(html.EscapeString(k))
-			if ki!=len(j.Nazwiska)-1 {
+			if ki != len(j.Nazwiska)-1 {
 				buffer.WriteString("<br>")
 			}
 		}
 		buffer.WriteString("</td><td>")
-		wn(j.BrakiPunktuZlyKod,j.ZaBrakPunktuZłyKod())
+		wn(j.BrakiPunktuZlyKod, j.ZaBrakPunktuZłyKod())
 		td()
-		wnb(j.BrakSpecjalnego!=0,j.ZaBrakZadaniaSpecjalnego())
+		wnb(j.BrakSpecjalnego != 0, j.ZaBrakZadaniaSpecjalnego())
 		td()
-		wn(j.Mylne,j.ZaStowarzyszony())
+		wn(j.Mylne, j.ZaStowarzyszony())
 		td()
-		wn(j.Spoznienie,j.ZaSpóźnienie())
+		wn(j.Spoznienie, j.ZaSpóźnienie())
 		td()
-		wn(j.ZmianaDecyzji,j.ZaZmianęDecyzji())
+		wn(j.ZmianaDecyzji, j.ZaZmianęDecyzji())
 		td()
-		wn(j.Skreslenia,j.ZaSkreślenia())
+		wn(j.Skreslenia, j.ZaSkreślenia())
 		w("</td></tr>")
 	}
 	w(`</table><br><br><br><br><br><br><br><hr><font size="7"><p align="right"><i>Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></i></p></font></body></html>`)
@@ -187,7 +186,7 @@ func (z Zawody) Present(out io.Writer) {
 type wynikiCSV []druzynaCSV
 
 func (w wynikiCSV) Wyniki() Wyniki {
-	lista := make(Wyniki,0,len(w))
+	lista := make(Wyniki, 0, len(w))
 	for i := range w {
 		lista = append(lista, w[i].Druzyna())
 	}
@@ -201,11 +200,9 @@ func Daj(in *os.File) Wyniki {
 		read.TrimLeadingSpace = true
 		return read
 	})
-	lista := make(wynikiCSV,0,50)
-	if err := gocsv.UnmarshalFile(in, &lista); err!=nil {
+	lista := make(wynikiCSV, 0, 50)
+	if err := gocsv.UnmarshalFile(in, &lista); err != nil {
 		panic(err)
 	}
 	return lista.Wyniki()
 }
-
-
