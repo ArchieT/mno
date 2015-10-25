@@ -119,11 +119,11 @@ type Zawody struct {
 
 func (z Zawody) Present(out io.Writer) {
 	var buffer bytes.Buffer
-	buffer.WriteString(`<html><head><meta charset="utf-8"><style> table, th, td { border: 1px black; padding: 10px } </style><title>MnO — wyniki</title></head><body><p align="center"><font size="6"><b>Wyniki szkolnych Marszów na Orientację</b><br></font><font size="5"><b>`)
+	buffer.WriteString(`<html><head><meta charset="utf-8"><style> table, th, td { border: 1px solid black; padding: 5px } </style><title>MnO — wyniki</title></head><body><p align="center"><font size="6"><b>Wyniki szkolnych Marszów na Orientację</b><br></font><font size="5"><b>`)
 	buffer.WriteString(z.Data)
 	buffer.WriteString(`<br>`)
 	buffer.WriteString(z.Miejsce)
-	buffer.WriteString("</b></font></p><br><br><table><tr><th>Msc</th><th>PK(suma)</th><th>Nazwa</th><th>Imiona i nazwiska</th><th>BP</th><th>BP E</th><th>PS</th><th>Sþoźnienie</th><th>Poprawki</th><th>Skreślenia</th></tr>")
+	buffer.WriteString("</b></font></p><br><table><tr><th>Msc</th><th>PK(suma)</th><th>Nazwa</th><th>Imiona i nazwiska</th><th>BP</th><th>BP E</th><th>PS</th><th>Sþoźnienie</th><th>Poprawki</th><th>Skreślenia</th></tr>")
 	miejsca := z.Wyniki.Miejsca()
 	td := func() {
 		buffer.WriteString("</td><td>")
@@ -179,7 +179,7 @@ func (z Zawody) Present(out io.Writer) {
 		wn(j.Skreslenia, j.ZaSkreślenia())
 		w("</td></tr>")
 	}
-	w(`</table><br><br><br><br><br><br><br><hr><font size="1"><p align="right"><i>Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></i></p></font></body></html>`)
+	w(`</table><br><hr><font size="1"><p align="right"><i>Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></i></p></font></body></html>`)
 	buffer.WriteTo(out)
 }
 
