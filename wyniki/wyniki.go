@@ -89,7 +89,7 @@ func (d druzynaCSV) Druzyna() Druzyna {
 type Wyniki []Druzyna
 
 func (w Wyniki) Miejsca() map[int]int {
-	var miejsca map[int]int
+	miejsca := make(map[int]int)
 	punkty := make([]int, 0, len(w))
 	for _, j := range w {
 		punkty = append(punkty, j.PunktyKarne())
