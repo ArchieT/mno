@@ -181,7 +181,7 @@ func (z Zawody) Present(out io.Writer) {
 		wn(j.Skreslenia,j.ZaSkreślenia())
 		w("</td></tr>")
 	}
-	w("</table></body></html>")
+	w(`</table><br><br><br><br><br><br><br><hr><p align="right">Wygenerowano za pomocą <a href="https://github.com/ArchieT/mno">github.com/ArchieT/mno</a></p></body></html>`)
 	buffer.WriteTo(out)
 }
 
