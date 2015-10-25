@@ -96,10 +96,6 @@ func (w Wyniki) Miejsca() map[int]int {
 	}
 	sort.Ints(punkty)
 	index := 1
-	for i := len(punkty)/2 - 1; i >= 0; i-- {
-		opp := len(punkty) - 1 - i
-		punkty[i], punkty[opp] = punkty[opp], punkty[i]
-	}
 	for _, j := range punkty {
 		if _, ok := miejsca[j]; !ok {
 			miejsca[j] = index
