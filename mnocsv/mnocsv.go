@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"flag"
 	"github.com/ArchieT/mno/wyniki"
 )
@@ -19,5 +18,5 @@ func main() {
 
 	filename := flag.Args()[0]
 
-
+	
 }
